@@ -10,6 +10,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const musicBtn = document.getElementById('musicBtn');
     const bgMusic = document.getElementById('bgMusic');
 
+    // --- Auto-Play Attempt ---
+    function tryPlayMusic() {
+        if (!isPlaying) {
+            bgMusic.play().then(() => {
+                isPlaying = true;
+                musicBtn.textContent = "⏸️ Pause Music";
+                musicBtn.classList.add('playing');
+                console.log("Music started automatically!");
+            }).catch(e => {
+                console.log("Auto-play blocked by browser, waiting for interaction.");
+            });
+        }
+    }
+
+    // Try immediately
+    tryPlayMusic();
+
+    // Also retry on any first interaction (click anywhere)
+    document.addEventListener('click', tryPlayMusic, { once: true });
+
     // --- Message Elements for Typing Effect ---
     // We will clear these initially and type into them
     const msgLine1 = messageCard.querySelector('.message-text:nth-of-type(1)');
