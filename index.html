@@ -11,7 +11,17 @@
 </head>
 
 <body>
-    <div class="container">
+    <!-- Overlay for "Click to Enter" to ensure Audio Autoplay -->
+    <div id="overlay">
+        <div class="overlay-content">
+            <h1>🎁 A Special Gift for You! 🎁</h1>
+            <p>Tap to Open</p>
+            <button id="enterBtn">Click Here ❤️</button>
+        </div>
+    </div>
+
+    <!-- Main Content (Hidden initially) -->
+    <div class="container hidden-content" id="mainContainer">
         <h1 class="title">Happy Teddy Day, Ishu! 🧸</h1>
 
         <div class="teddy-container" id="teddyContainer">

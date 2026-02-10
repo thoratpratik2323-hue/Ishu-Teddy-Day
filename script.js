@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- Elements ---
+    const overlay = document.getElementById('overlay');
+    const enterBtn = document.getElementById('enterBtn');
+    const mainContainer = document.getElementById('mainContainer');
     const teddyContainer = document.getElementById('teddyContainer');
     const messageCard = document.getElementById('messageCard');
     const closeBtn = document.getElementById('closeBtn');
@@ -9,26 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const reasonText = document.getElementById('reasonText');
     const musicBtn = document.getElementById('musicBtn');
     const bgMusic = document.getElementById('bgMusic');
-
-    // --- Auto-Play Attempt ---
-    function tryPlayMusic() {
-        if (!isPlaying) {
-            bgMusic.play().then(() => {
-                isPlaying = true;
-                musicBtn.textContent = "⏸️ Pause Music";
-                musicBtn.classList.add('playing');
-                console.log("Music started automatically!");
-            }).catch(e => {
-                console.log("Auto-play blocked by browser, waiting for interaction.");
-            });
-        }
-    }
-
-    // Try immediately
-    tryPlayMusic();
-
-    // Also retry on any first interaction (click anywhere)
-    document.addEventListener('click', tryPlayMusic, { once: true });
 
     // --- Message Elements for Typing Effect ---
     // We will clear these initially and type into them
@@ -76,6 +59,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         type();
     }
+
+    // --- ENTER BUTTON LOGIC ---
+    enterBtn.addEventListener('click', () => {
+        // 1. Play Music immediately on user gesture
+        bgMusic.play().then(() => {
+            isPlaying = true;
+            musicBtn.textContent = "⏸️ Pause Music";
+            musicBtn.classList.add('playing');
+        }).catch(error => {
+            console.log("Audio play failed on click:", error);
+        });
+
+        // 2. Hide Overlay
+        overlay.classList.add('fade-out');
+
+        // 3. Show Main Content
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            mainContainer.classList.remove('hidden-content');
+            mainContainer.classList.add('visible');
+        }, 800);
+    });
 
     // --- Event Listeners ---
 
@@ -161,12 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 musicBtn.classList.add('playing');
                 isPlaying = true;
             }).catch(e => {
-                alert("Please add a song named 'song.mp3' in the folder to play music! 🎶");
-                console.log("Music play failed (likely no file or user interaction required):", e);
-                // Reset button state just in case
-                musicBtn.textContent = "🎵 Play Music";
-                musicBtn.classList.remove('playing');
-                isPlaying = false;
+                console.log("Music toggle failed:", e);
             });
         }
     });
